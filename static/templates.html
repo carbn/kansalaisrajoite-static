@@ -1,0 +1,533 @@
+<script id="frontpage" type="text/html">
+	<div class="etusivu">
+		<article>
+			<h1>Paljon on jo kielletty, mutta enemmänkin voitaisiin kieltää</h1>
+			<h2>Kansalaisrajoite.fi -verkkopalvelussa voit ehdottaa uusia kieltoja, jotka rajoittavat kansalaisen elämää sekä kannattaa ja seurata muiden ehdottamia kansalaisrajoitteita.</h2>
+			<a class="painike" href="#!/ohjeet"><h2>Lue lisää kansalaisrajoitteesta</h2></a>
+		</article>
+		<article>
+			<h1>Selaa kansalaisrajoitteita</h1>
+			<h2>Kansalaisrajoite.fi -palvelussa vireillä olevat kiellot löytyvät täältä.</h2>
+			<a class="painike" href="#!/rajoitteet"><h2>Selaa kansalaisrajoitteita</h2></a>
+		</article>
+		<article>
+			<h1>Tarvitsetko apua?</h1>
+			<h2>Jos sinulla on kansalaisrajoite.fi -palveluun liittyviä kysymyksiä, katso ohjeet tai ota tarvittaessa yhteyttä ylläpitoon.</h2>
+			<a class="painike" href="mailto:palvelu@kansalaisrajoite.fi"><h2>palvelu@kansalaisrajoite.fi</h2></a>
+		</article>
+	</div>
+</script>
+
+<script id="restrictions" type="text/html">
+	<div class="rajoitteet">
+		<h1>Selaa kansalaisrajoitteita</h1>
+		<div class="rajoitenavi">
+			<ul>
+				{{#sort}}
+				<li{{#byTitle}} class="valittu"{{/byTitle}}>
+					<a href="#!/rajoitteet/{{#byTitleDesc}}-{{/byTitleDesc}}otsikko">Otsikko{{#byTitle}} {{#byTitleDesc}}▾{{/byTitleDesc}}{{^byTitleDesc}}▴{{/byTitleDesc}}{{/byTitle}}</a>
+				</li>
+				<li{{#byVotes}} class="valittu"{{/byVotes}}>
+					<a href="#!/rajoitteet/{{#byVotesDesc}}-{{/byVotesDesc}}aanet">Äänet{{#byVotes}} {{#byVotesDesc}}▾{{/byVotesDesc}}{{^byVotesDesc}}▴{{/byVotesDesc}}{{/byVotes}}</a>
+				</li>
+				<li{{#byAge}} class="valittu"{{/byAge}}>
+					<a href="#!/rajoitteet/{{#byAgeDesc}}-{{/byAgeDesc}}aika">Luomisaika{{#byAge}} {{#byAgeDesc}}▾{{/byAgeDesc}}{{^byAgeDesc}}▴{{/byAgeDesc}}{{/byAge}}</a>
+				</li>
+				{{/sort}}
+			</ul>
+		</div>
+		<div class="narrowclear"></div>
+		<div class="pagination"></div>
+		<div class="clear line"></div>
+		<div class="rajoitelista">
+			{{#restrictions}}
+			<a href="#!/rajoite/{{id}}/{{slug}}">
+				<article>
+					{{#isNew}}
+						<h4>Jonossa</h4>
+						<p>{{title}}</p>
+						<p>Luotu {{#date}}{{created}}{{/date}}</p>
+						<div class="clear"></div>
+					{{/isNew}}
+					{{#isApproved}}
+						<h4>Kielletään</h4>
+						<p{{#voted}} class="voted tooltip" title="Olet kannattanut rajoitetta"{{/voted}}>{{title}}</p>
+						<p>Kieltäminen alkoi {{#date}}{{created}}{{/date}}</p>
+						<p>{{votes}} kieltäjää</p>
+						<div class="clear"></div>
+						<div class="bar" style="width:{{#percentCompleted}}{{votes}}{{/percentCompleted}}%;"></div>
+					{{/isApproved}}
+					{{#isRejected}}
+						<h4>Hylätty</h4>
+						<p>{{title}}</p>
+						<p>Luotu {{#date}}{{created}}{{/date}}</p>
+						<div class="clear"></div>
+					{{/isRejected}}
+				</article>
+			</a>
+			{{/restrictions}}
+		</div>
+		<div class="clear line" style="margin-top: 8px;"></div>
+		<div class="info_text"></div>
+		<div class="pagination"></div>
+	</div>
+</script>
+
+<script id="restriction" type="text/html">
+	<div class="rajoite">
+		<h1>{{title}}</h1>
+		{{#isApproved}}
+		<a href="#" class="sharetw" data-title="{{title}}"><div id="tw" class="tooltip" title="Jaa Twitterissa"></div></a>
+		<a href="#" class="sharefb" data-title="{{title}}"><div id="fb" class="tooltip" title="Jaa Facebookissa"></div></a>
+		{{/isApproved}}
+		<div class="clear"></div>
+		<article>
+			{{#isNew}}
+				<p>Rajoite odottaa vahvistusta. Luotu {{#date}}{{created}}{{/date}}.</p>
+			{{/isNew}}
+			{{#isApproved}}
+				<p>Kieltäminen alkoi {{#date}}{{created}}{{/date}} ja on saavuttanut <em>{{votes}}</em> kannattajaa.</p>
+				{{#approver}}
+					<p>Rajoitteen vahvisti {{approver.name}}.</p>
+				{{/approver}}
+			{{/isApproved}}
+			{{#isRejected}}
+				<p>Rajoite on hylätty. Hylkäyksen syitä voivat olla mm. huono kieliasu, puutteelliset perustelut, hyvien tapojen vastaisuus, tai rajoitteen samankaltaisuus jo jonkin olemassa olevan rajoitteen kanssa.</p>
+				{{#approver}}
+					<p>Rajoitteen hylkäsi {{approver.name}}.</p>
+				{{/approver}}
+			{{/isRejected}}
+		</article>
+		<article>
+			<h3>Rajoitteen sisältö ja perustelut</h3>
+			<p>{{body}}</p>
+		</article>
+		<article>
+			<h3>Rajoitteen ehdottaja</h3>
+			<p>{{user_name}}, {{user_city}}</p>
+		</article>
+		{{#isNew}}
+			{{#isAdmin}}
+				<input class="painike lower" type="submit" name="approve" data-restriction-id="{{id}}" value="Vahvista rajoite" />
+				<input class="painike lower" type="submit" name="reject" data-restriction-id="{{id}}" value="Hylkää rajoite" />
+			{{/isAdmin}}
+			<input class="painike lower" type="submit" name="delete" data-restriction-id="{{id}}" value="Poista rajoite" />
+		{{/isNew}}
+		{{#isApproved}}
+			{{#voted}}
+				<p class="info">Olet kannattanut rajoitetta</p>
+			{{/voted}}
+			{{^voted}}
+				<input class="painike lower" type="submit" name="vote" data-restriction-id="{{id}}" value="Kannata rajoitetta" />
+			{{/voted}}
+		{{/isApproved}}
+		{{#isRejected}}
+			<input class="painike lower" type="submit" name="delete" data-restriction-id="{{id}}" value="Poista rajoite" />
+		{{/isRejected}}
+	</div>
+</script>
+
+<script id="restrict" type="text/html">
+	<div class="rajoite">
+		<h1 style="float:none;">Tee kansalaisrajoite</h1>
+		<p>Voit luoda kansalaisrajoite-ehdotuksen antamalla sille otsikon ja perustelut. Lisäksi otsikon alkuun lisätään automaattisesti Kielletään-sana. Voit halutessasi tutustua <a href="#!/ohjeet/rajoitteenluominen">ohjeisiin</a> ennen ehdotuksen tekoa.</p>
+		<form id="newrestriction" class="teerajoite">
+			<article>
+				<label>
+					<table class="formtable">
+						<tr>
+							<td class="formlabel">
+								<span>Kielletään</span>
+							</td>
+							<td>
+								<input class="restrictionlabel" type="text" name="title" maxlength="175"/>
+							</td>
+						</tr>
+					</table>
+				</label>
+			</article>
+			<article>
+				<h2>Rajoitteen sisältö ja perustelut</h2>
+				<label>
+					<textarea class="restrictiontext" name="body"></textarea>
+				</label>
+			</article>
+			<article>
+				<table class="formtable">
+					<tr>
+						<td class="formlabel">Nimi</td>
+						<td>
+							<input class="restrictionlabel" type="text" name="name" value="{{info.name}}" maxlength="50"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="formlabel">Paikkakunta</td>
+						<td>
+							<input class="restrictionlabel" type="text" name="city" value="{{info.city}}" maxlength="30"/>
+						</td>
+					</tr>
+				</table>
+			</article>
+			<p class="tip">Kansalaisrajoite-ehdotukset tarkastetaan ennen sivustolle lisäämistä.</p>
+			<input class="painike" type="submit" value="Lähetä rajoite tarkastettavaksi" />
+		</form>
+	</div>
+</script>
+
+<script id="news" type="text/html">
+	<div class="tiedotteet">
+		<h1>Tiedotteet</h1>
+		{{#hasNews}}
+			{{#news}}
+				<article>
+					<h2>{{title}}</h2>
+					<h3>{{#date}}{{created}}{{/date}}</h3>
+					<p>{{{body}}}</p>
+				</article>
+			{{/news}}
+		{{/hasNews}}
+		{{^hasNews}}
+			<p>Ei tiedotteita.</p>
+		{{/hasNews}}
+	</div>
+</script>
+
+<script id="guide" type="text/html">
+	<div class="ohjeet">
+		<aside>
+			<h1>Ohjeet</h1>
+			<ul>
+				<li><a href="#!/ohjeet/palvelu">Kansalaisrajoite.fi-palvelu</a></li>
+				<li><a href="#!/ohjeet/rajoitteenkannattaminen">Rajoitteen kannattaminen</a></li>
+				<li><a href="#!/ohjeet/rajoitteenluominen">Rajoitteen luominen</a></li>
+				<li><a href="#!/ohjeet/rekisteriseloste">Rekisteriseloste</a></li>
+			</ul>
+		</aside>
+		<div class="content">
+			<article id="palvelu">
+				<h2><a class="anchor" id="palvelu">Kansalaisrajoite.fi-palvelu</a></h2>
+				<p>Suomessa on pitkä perinne kieltämisestä. Ensireaktio niin uusiin, hauskoihin kuin itselle outoihinkin asioihin on pelonsekoitteinen paheksunta ja kiellon vaatiminen. Kansalaisrajoite.fi-palvelu tarjoaa suomalaisille kanavan, missä he voivat ehdottaa uusia kieltoja ja rajoituksia omaan ja muiden kansalaisten elämään.</p>
+				<p>Kun Suomessa aloitteiden käsittelyyn tarvitaan 50 000 ääntä, riittää rajoitteiden asettamiseksi pienen piirin käsittely: 101 ääntä takaa kiellolle täyden kannatuksen statuksen.</p>
+				<p>Palvelun käyttö on maksutonta ja turvallista. Jotta voit luoda omia tai kannattaa muiden luomia kansalaisrajoitteita, sinun täytyy rekisteröityä palvelun käyttäjäksi. Rekisteröityäksesi tarvitset sähköpostiosoitteen.</p>
+			</article>
+			<article id="rajoitteenkannattaminen">
+				<h2><a class="anchor">Rajoitteen kannattaminen</a></h2>
+				<p>Voit selata rajoitteita niiden kannatuksen tai ajankohdan mukaan. Yksittäisen rajoitteen sivulla voit tutustua rajoitteen sisältöön ja perusteluihin sekä halutessasi kannattaa rajoitetta. Voit kannattaa rajoitetta vain yhden kerran.</p>
+			</article>
+			<article id="rajoitteenluominen">
+				<h2><a class="anchor">Rajoitteen luominen</a></h2>
+				<p>Rekisteridyttyäsi käyttäjäksi voit luoda uuden kansalaisrajoitteen. Kansalaisrajoitteelle täytetään kaksi kohtaa:</p>
+				<ol>
+					<li>Otsikko</li>
+					<li>Sisältö ja perustelut</li>
+				</ol>
+				<p>Otsikko alkaa aina Kielletään-sanalla. Tämän jälkeen otsikon tulee selkeästi ja ytimekkäästi kertoa mikä on kiellon kohde.</p>
+				<p>Sisältö ja perustelut kertoo enemmän kiellon kohteesta. Tässä kerrotaan tarkemmin aiheesta, sen taustoista ja yksityiskohdista. Tarkoitus on, että aiheesta vähemmän selvillä olevat saavat hyvän kuvan kiellettävästä asiasta. Kielto tulee myös perustella. Perustelut vastaavat kysymykseen "Miksi kiellon kohde on kiellettävä?". Koska olemme Suomessa, ei kieltojen perusteluiden tarvitse olla kaksisia.</p>
+				<p>Kun kansalaisrajoite-ehdotuksesi on valmis, voit lähettää sen tarkastettavaksi. Kansalaisrajoitteet tarkastetaan ennen sivustolle lisäämistä, jonka jälkeen ne ilmestyvät sivustolle muiden kannatettavaksi. Tarkastuksessa ehdotus voidaan myös hylätä. Syitä hylkäykselle ovat vääränlainen tai puuttuva otsikointi, täysin tulkitsemiskelvoton sisältö tai perustelut, ylitsevuotavan vajaavainen kielioppi sekä vastaavansisältöisen rajoitteen olemassaolo.</p>
+				<p>Rajoitetta ei voi enää muokata hyväksymisen jälkeen.</p>
+			</article>
+			<article id="rekisteriseloste">
+				<h2><a class="anchor">Rekisteriseloste</a></h2>
+				<p>
+					Henkilötietolaki (523/99)<br />
+					Laatimispvm: 1.1.2014<br />
+					Yksityisyyden suoja
+				</p>
+				<p>
+					1. Rekisterinpitäjä<br />
+					Kansalaisrajoite<br />
+					email palvelu@kansalaisrajoite.fi<br />
+				</p>
+				<p>
+					2. Rekisteriasioista vastaava henkilö ja/tai yhteyshenkilö<br />
+					Kansalaisrajoite ylläpito<br />
+					palvelu@kansalaisrajoite.fi</p>
+				<p>
+					3. Rekisterin nimi<br />
+					Kansalaisrajoite.fi rekisteri</p>
+				<p>
+					4. Henkilötietojen käsittelyn tarkoitus / rekisterin käyttötarkoitus<br />
+					Rekisterin tietoja käytetään kansalaisrajoite.fi-palvelun mahdollistamiseksi. Tietoja ei luovuteta ulkopuolisille. Tietoja ei käytetä suoramainontaan, etämyyntiin tai muuta suoramarkkinointia sekä markkina- tai mielipidetutkimusta varten.
+				</p>
+				<p>
+					5. Rekisterin tietosisältö<br />
+					Palvelun käyttäjistä kerätään ja tallennetaan seuraavat tiedot: nimi, paikkakunta, sähköpostiosoite.
+				</p>
+				<p>
+					6. Säännönmukaiset tietolähteet<br />
+					Rekisteriin päivitettäviä tietoja saadaan säännöllisesti suoraan käyttäjiltä.
+				</p>
+				<p>
+					7. Säännönmukaiset tietojen luovutukset ja tietojen siirto EU:n tai Euroopan talousalueen ulkopuolelle<br />
+					Rekisteritietoja ei luovuteta ulkomaille.
+				</p>
+				<p>
+					8. Rekisterin suojauksen periaatteet<br />
+					A. Manuaalinen aineisto: Tietoja ei säilytetä manuaalisesti.<br />
+					B. ATK:lle talletetut tiedot: Tietoihin pääsy on rajattu käyttöoikeuksin kansalaisrajoite.fi-palvelun ylläpidosta vastaaville henkilöille. Salasanat on salattu eikä niitä säilytetä selkokielisinä.</p>
+				<p>
+					9. Rekisteröidyn tarkastusoikeus<br />
+					Käyttäjällä on oikeus tarkistaa itseään koskevat rekisteritiedot ja saada niistä tarvittaessa kopiot.</p>
+				<p>
+					10. Rekisteröidyn kielto-oikeus<br />
+					Rekisteröidyllä on oikeus kieltää rekisterinpitäjää käsittelemästä häntä itseään koskevia tietoja suoramainontaan, etämyyntiin ja muuta suoramarkkinointia sekä markkina- ja mielipidetutkimusta varten.</p>
+			</article>
+		</div>
+		<div class="clear"></div>
+	</div>
+</script>
+
+<script id="headerbox" type="text/html">
+	<div><div>
+		{{#isLogged}}
+		<p><strong>Kirjautuneena: {{#info.name}}{{info.name}}{{/info.name}}{{^info.name}}{{info.email}}{{/info.name}} </strong><a href="#!/muuta-tietoja"><span>Muuta tietojasi</span></a><a href="#" class="link-logout"><span>Kirjaudu ulos</span></a></p>
+		{{/isLogged}}
+		{{^isLogged}}
+		<p><a class="link-register" href="#"><span>Rekisteröidy käyttäjäksi</span></a><a class="link-login" href="#"><span>Kirjaudu sisään</span></a></p>
+		{{/isLogged}}
+	</div></div>
+	<nav>
+		<h1><a href="#!/etusivu">Kansalais<span class="highlight">rajoite<em>.</em>fi</span></a></h1>
+		<ul>
+			<li><a href="#!/etusivu">Kansalaisrajoite.fi etusivu</a></li>
+			<li><a href="#!/rajoitteet">Selaa kansalaisrajoitteita</a></li>
+			<li><a href="#!/rajoita">Tee kansalaisrajoite</a></li>
+			<li><a href="#!/ohjeet">Ohjeet</a></li>
+			<li><a href="#!/tiedotteet">Tiedotteet</a></li>
+		</ul>
+		<ul>
+			<li><a href="#!/pasvenska">På svenska</a></li>
+			<li><a href="#!/inenglish">In English</a></li>
+		</ul>
+	</nav>
+</script>
+
+<script id="pasvenska" type="text/html">
+	<div class="tiedotteet">
+		<h1>På svenska</h1>
+		<article>
+		<h2>Kansalaisrajoite.fi</h2>
+		<p>Och samma på svenska.</p>
+		</article>
+	</div>
+</script>
+
+<script id="new-password" type="text/html">
+	<div class="contentform">
+		<p class="alert hidden pwlength">Salasanan tulee olla vähintään 8 merkkiä pitkä.</p>
+		<p class="alert hidden pwsimple">Salasanasi ei täytä tietoturvallisuusvaatimuksia..</p>
+		<p class="alert hidden generic">Tapahtui virhe salasanaa asetettaessa.</p>
+		<p class="info hidden done">Salasana vaihdettu. Voit nyt kirjautua sisään antamallasi salasanalla.</p>
+		<h1 style="float:none;">Anna uusi salasana</h1>
+		<form id="newpass" class="annasalasana">
+			<div class="salasana">
+				<label>
+					<table class="formtable">
+						<tr>
+							<td class="formlabel">
+								<p>Uusi salasana:</p>
+							</td>
+							<td>
+								<input class="formfield" type="password" name="password" size="25" />
+								<input type="hidden" name="email" value="{{email}}" maxlength="100" />
+								<input type="hidden" name="token" value="{{token}}" />
+							</td>
+						</tr>
+					</table>
+				</label>
+			</div>
+			<input class="painike" type="submit" value="Vaihda salasana" />
+		</form>
+	</div>
+</script>
+
+<script id="verification-sent" type="text/html">
+	<div class="tiedotteet">
+		<h1>Vahvistuspyyntö lähetetty</h1>
+		<article>
+			<p>Lähetimme antamaasi sähköpostiosoitteeseen linkin, jota klikkaamalla voit vahvistaa rekisteröinnin.</p>
+		</article>
+	</div>
+</script>
+
+<script id="verification" type="text/html">
+	<div class="tiedotteet">
+		<article>
+			{{#info}}
+			<h2>Rekisteröityminen vahvistettu</h2>
+			<p>Voit nyt kannattaa olemassa olevia rajoituksia tai luoda uusia rajoituksia kannatettavaksi.</p>
+			{{/info}}
+			{{^info}}
+			<h2>Vahvistus epäonnistui</h2>
+			<p>Tapahtui virhe.</p>
+			{{/info}}
+		</article>
+	</div>
+</script>
+
+<script id="account-edit" type="text/html">
+	<div class="contentform">
+		<p class="alert hidden pwlength">Salasanan tulee olla vähintään 8 merkkiä pitkä.</p>
+		<p class="alert hidden pwsimple">Salasanasi ei täytä tietoturvallisuusvaatimuksia.</p>
+		<p class="alert hidden generic">Tapahtui virhe salasanaa asetettaessa.</p>
+		<p class="info hidden done">Tiedot muutettu.</p>
+		<h1 style="float:none;">Muuta tietojasi</h1>
+		<form id="changeinfo" class="annasalasana">
+			<div class="salasana">
+				<table class="formtable">
+					<tr>
+						<td class="formlabel">
+							<p>Nimi</p>
+						</td>
+						<td>
+						<label>
+							<input class="formfield" type="text" name="name" value="{{name}}" maxlength="50" />
+						</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="formlabel">
+							<p>Paikkakunta</p>
+						</td>
+						<td>
+						<label>
+							<input class="formfield" type="text" name="city" value="{{city}}" maxlength="30" />
+						</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="formlabel">
+							<p>Uusi salasana</p>
+						</td>
+						<td>
+						<label>
+							<input class="formfield" type="password" name="password" size="25" />
+						</label>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<input class="painike" type="submit" value="Muuta tiedot" />
+		</form>
+	</div>
+</script>
+
+<script id="dialog-login" type="text/html">
+	<div class="reglog">
+		<article>
+			<p class="regtip">Sisäänkirjautuminen</p>
+			<p class="alert hidden wrongpw">Virheellinen käyttäjätunnus tai salasana.</p>
+			<p class="alert hidden notverified">Sähköpostiosoitetta ei ole vahvistettu.</p>
+			<form id="login" class="kirjautuminen">
+				<label>
+				<p>Sähköpostiosoite</p><input class="formfield" id="email" type="text" name="email" />
+				</label>
+				<label>
+				<p>Salasana</p><input class="formfield" type="password" name="password" size="25" />
+				</label>
+				<label>
+				<input class="painike lower" type="submit" value="Kirjaudu sisään" />
+				</label>
+			</form>
+			<p class="regtip">Ei käyttäjätunnuksia? <a class="link-loginregister" href="#">Rekisteröidy käyttäjäksi</a>.</p>
+			<p class="regtip"><a class="link-forgotpassword" href="#">Unohtuiko salasana</a>?</p>
+		</article>
+	</div>
+</script>
+
+<script id="dialog-register" type="text/html">
+	<div class="reglog">
+		<article>
+			<p class="regtip">Rekisteröityminen käyttäjäksi</p>
+			<p class="alert hidden pwlength">Salasanan tulee olla vähintään 8 merkkiä pitkä.</p>
+			<p class="alert hidden pwsimple">Salasanasi ei täytä tietoturvallisuusvaatimuksia.</p>
+			<p class="alert hidden badrequest">Sähköpostiosoite ja salasana vaaditaan.</p>
+			<p class="alert hidden conflict">Sähköpostiosoite on jo rekisteröity.</p>
+			<form id="register" class="rekisteroityminen">
+				<label>
+					<p>Nimi</p><input class="formfield" type="text" name="name" maxlength="50" />
+				</label>
+				<label>
+					<p>Paikkakunta</p><input class="formfield" type="text" name="city" maxlength="30" />
+				</label>
+				<label>
+					<p>Sähköpostiosoite *</p><input class="formfield" id="email" type="text" name="email" maxlength="100" />
+				</label>
+				<label>
+					<p>Salasana *</p><input class="formfield" type="password" name="password" size="25" />
+				</label>
+				<label>
+					<input class="painike lower" type="submit" value="Rekisteröidy käyttäjäksi" />
+				</label>
+			</form>
+			<p class="regtip">Onko sinulla jo käyttäjätunnukset? <a class="link-registerlogin" href="#">Kirjaudu sisään</a>.</p>
+		</article>
+	</div>
+</script>
+
+<script id="dialog-lostpassword" type="text/html">
+	<div class="reglog">
+		<article>
+			<p class="regtip">Unohtunut salasana</p>
+			<p class="alert hidden badrequest">Virheellinen sähköpostiosoite.</p>
+			<p class="alert hidden generic">Virhe sähköpostia lähetettäessä.</p>
+			<p class="info hidden emailsent">Sähköposti lähetetty antamaasi osoitteeseen.</p>
+			<form id="forgotpass" class="unohtunutsalasana">
+				</label>
+					<p>Sähköpostiosoite, jolla rekisteröidyit</p><input class="formfield" id="email" type="text" name="email" maxlength="100" />
+				</label>
+				<label>
+					<input class="painike lower" type="submit" value="Lähetä" />
+				</label>
+			</form>
+		</article>
+	</div>
+</script>
+
+<script id="error-login" type="text/html">
+	<div class="tiedotteet">
+		<h1>Toiminto vaatii kirjautumisen</h1>
+		<article>
+			<p>Kirjaudu sisään edetäksesi.</p>
+			<a class="painike link-registerlogin" href="#"><h2>Kirjaudu sisään</h2></a>
+			<a class="painike link-loginregister" href="#"><h2>Rekisteröidy käyttäjäksi</h2></a>
+		</article>
+	</div>
+</script>
+
+<script id="error-unauthorized" type="text/html">
+	<div class="tiedotteet">
+		<h1>Ei sallittu</h1>
+		<article>
+		<p>Valitettavasti käyttäjäoikeutesi eivät riitä tämän toiminnon suorittamiseksi.</p>
+		</article>
+	</div>
+</script>
+
+<script id="error-notfound" type="text/html">
+	<div class="tiedotteet">
+		<h1>Sivua ei löydy</h1>
+		<article>
+		<p>Sivua, jota etsit, ei ole olemassa.</p>
+		</article>
+	</div>
+</script>
+
+<script id="error-generic" type="text/html">
+	<div class="tiedotteet">
+		<h1>Tapahtui virhe</h1>
+		<article>
+		<p>Ole hyvä ja yritä uudelleen. Jos ongelma toistuu, pyydämme olemaan yhteydessä ylläpitoon: <a href="mailto:palvelu@kansalaisrajoite.fi">palvelu@kansalaisrajoite.fi</a></p>
+		</article>
+	</div>
+</script>
+
+<script id="inenglish" type="text/html">
+	<div class="tiedotteet">
+		<h1>In English</h1>
+		<article>
+		<h2>Kansalaisrajoite.fi</h2>
+		<p>In Finland, there is a time honoured tradition in forbidding things. Whether it be a new, fun, endeavouring, surprising, strange or novel approach, innovation or invention, the first reaction is to forbid it. Kansalaisrajoite.fi offers citizens a medium through which to introduce and support new regulations and restrictions to their own and their fellow citizens' lives.</p>
+		</article>
+	</div>
+</script>

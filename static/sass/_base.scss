@@ -1,0 +1,79 @@
+@charset "UTF-8";
+@import url(//fonts.googleapis.com/css?family=Merriweather+Sans:400,500,600,700,300);
+@import url(//fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700,300italic);
+@import "compass";
+$themecolor: #E74C3C;
+$headergray: #dcdcdc;
+$semigray: #f2f2f2;
+$pagewidth: 960px;
+$minwidth: 320px;
+$break: 980px;
+$anitime: 0.1s;
+$basefontsize: 16px;
+@include global-reset; // ERIC MAYER STYLES
+@mixin wide {
+  @media screen and (min-width:$break) {
+    @content
+  }
+}
+@mixin narrow {
+  @media screen and (max-width:$break) {
+    @content
+  }
+}
+@mixin scale {
+  margin:0 auto;
+  @include wide {
+      width:$pagewidth;
+  }
+  @include narrow {
+      min-width:$minwidth;
+      width:80%;
+  }
+}
+@mixin transition($transition...) {
+  -webkit-transition: $transition;
+  -moz-transition: $transition;
+  -o-transition: $transition;
+  transition: $transition;
+}
+@mixin columns($column-count, $column-width, $column-gap) {
+  -webkit-column-count: $column-count;
+  -moz-column-count: $column-count;
+  -o-column-count: $column-count;
+  column-count: $column-count;
+  -webkit-column-width: $column-width;
+  -moz-column-width: $column-width;
+  -o-column-width: $column-width;
+  column-width: $column-width;
+  -webkit-column-gap: $column-gap;
+  -moz-column-gap: $column-gap;
+  -o-column-gap: $column-gap;
+  column-gap: $column-gap;
+}
+@mixin border-radius($border-radius) {
+	-webkit-border-radius: $border-radius;
+	-moz-border-radius: $border-radius;
+	-o-border-radius: $border-radius;
+	border-radius: $border-radius;
+}
+@mixin border-box() {
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}
+@mixin rajoitteentausta($bg-line-url, $bg-img-url) {
+  @media screen and (min-width:$break) {
+    background:url($bg-line-url) top repeat-x, url($bg-img-url) 40px 32px no-repeat white;
+  }
+  @media screen and (max-width:$break) {
+    background:url($bg-line-url) top repeat-x white;
+  }
+}
+@mixin vertical-align {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
