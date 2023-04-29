@@ -279,19 +279,13 @@
 
 <script id="headerbox" type="text/html">
 	<div><div>
-		{{#isLogged}}
-		<p><strong>Kirjautuneena: {{#info.name}}{{info.name}}{{/info.name}}{{^info.name}}{{info.email}}{{/info.name}} </strong><a href="#!/muuta-tietoja"><span>Muuta tietojasi</span></a><a href="#" class="link-logout"><span>Kirjaudu ulos</span></a></p>
-		{{/isLogged}}
-		{{^isLogged}}
-		<p><a class="link-register" href="#"><span>Rekisteröidy käyttäjäksi</span></a><a class="link-login" href="#"><span>Kirjaudu sisään</span></a></p>
-		{{/isLogged}}
+		<p>Sivusto on arkistoitu. Käyttäjätiedot on poistettu eikä kirjautuminen enää onnistu.</p>
 	</div></div>
 	<nav>
 		<h1><a href="#!/etusivu">Kansalais<span class="highlight">rajoite<em>.</em>fi</span></a></h1>
 		<ul>
 			<li><a href="#!/etusivu">Kansalaisrajoite.fi etusivu</a></li>
 			<li><a href="#!/rajoitteet">Selaa kansalaisrajoitteita</a></li>
-			<li><a href="#!/rajoita">Tee kansalaisrajoite</a></li>
 			<li><a href="#!/ohjeet">Ohjeet</a></li>
 			<li><a href="#!/tiedotteet">Tiedotteet</a></li>
 		</ul>
