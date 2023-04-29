@@ -193,7 +193,7 @@ $(function() {
             });
 
             // load and display login status
-            $.getJSON('user.json', function(data) {
+            $.getJSON('data/user.json', function(data) {
                 if (data.name !== undefined) {
                     user.setLoggedIn(data);
                 } else {
@@ -212,7 +212,7 @@ $(function() {
                         show('section', 'frontpage');
                     },
                     '!/rajoitteet/:order?': function(order) {
-                        $.getJSON('restriction.json', function(data) {
+                        $.getJSON('data/restriction.json', function(data) {
                             showRestrictions(data, order);
                         });
                     },
@@ -223,7 +223,7 @@ $(function() {
                         // scroll to top
                         scrollTo('body');
 
-                        $.getJSON('restriction/' + id + '.json', function(data) {
+                        $.getJSON('data/restriction/' + id + '.json', function(data) {
                             data.date = function() {
                                 return convertToDateStr;
                             };
@@ -241,7 +241,7 @@ $(function() {
                         }
                     },
                     '!/tiedotteet': function() {
-                        $.getJSON('news.json', function(data) {
+                        $.getJSON('data/news.json', function(data) {
                             data.hasNews = (data.news.length > 0);
                             data.date = function() {
                                 return convertToDateStr;
